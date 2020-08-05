@@ -1,3 +1,10 @@
+
+/**
+ * 链表
+ * 相对于传统的数组，链表的一个好处在于
+ * 添加或移除元素的时候不需要移动其他元素
+ * 链表使用指针
+ */
 class Node {
     constructor (el) {
         this.element = el;
@@ -17,6 +24,7 @@ function defaultEquals (a, b) {
         this.equalsFn = equalsFn;
     }
 
+    // 末尾添加元素
     push (element) {
         const node = new Node(element);
         let current;
@@ -35,6 +43,7 @@ function defaultEquals (a, b) {
         this.count++;
     }
 
+    // 通过索引移除某个元素
     removeAt(index) {
         if (index >= 0 && index < this.count) {
 
@@ -54,15 +63,13 @@ function defaultEquals (a, b) {
         }
     }
 
+    // 通过索引获取元素
     getElementAt(index) {
 
         if (index >= 0 && index < this.count) {
-
             let node = this.head;
             for (let i = 0; i<index && node != null; i++) {
-
                 node = node.next;
-                
             }
             return node;
         }
@@ -70,13 +77,70 @@ function defaultEquals (a, b) {
         return undefined;
     }
 
+    // 在指定位置添加element
     insert(element, index) {
         if (index >= 0 && index <= this.count) {
             const node = new Node(element);
             if (index === 0) { // 在第一个位置添加
-                
+                const current = this.head;
+                node.next = current;
+                this.head = node;
+            } else {
+                const previous = this.getElementAt(index - 1);
+                const current = previous.next;
+                node.next = current;
+                previous.next = node;
             }
+            this.count++;
+            return true;
         }
+        return false;
+    }
+
+    // 查到元素返回索引
+    indexOf(element) {
+        let current = this.head;
+
+        for(let i=0; i<this.count && current!=null; i++) {
+            if (this.equalsFn(element, current.element)) {
+                return i;
+            }
+            current = current.next
+        }
+
+        return -1;
+    }
+
+    // 移除元素
+    remove(element) {
+        const index = this.indexOf(element);
+        return this.removeAt(index);
+    }
+
+    size() {
+        return this.count;
+    }
+
+    isEmpty() {
+        return this.size() === 0;
+    }
+
+    getHead() {
+        return this.head;
+    }
+
+    toString() {
+        if (this.head === null) {
+            return ''
+        }
+
+        let objString = `${this.head.element}`;
+        let current = this.head.next;
+        for (let i=1; i<this.count && current != null; i++) {
+            objString = `${objString},${current.element}`;
+            current = current.next;
+        }
+        return objString;
     }
 
 }
